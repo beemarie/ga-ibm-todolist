@@ -28,6 +28,9 @@ var cloudantDb = cloudant.db.use("mydb");
 // Swagger instrumentation
 app.use("/swagger/api", express.static("./public/swagger.yaml"));
 app.use("/explorer", express.static("./public/swagger-ui"));
+////////serve static file
+app.use("/", express.static("./views"));
+
 
 // Business logic
 app.get("/todoitems", function(req, res, next){
@@ -77,6 +80,7 @@ app.put("/todoitem/:id", function(req, res, next){
 	// Put your business logic here
 	res.json();
 });
+
 
 // app.delete("/todoitem/:id", function(req, res, next){
 // 	db.get()

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<meta name="description" content="description">
+<title>Todo List</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container" >
+    <h2>Todo List</h2>
+
+    <div>
+      <div class="formInputArea">
+        <input id="inputText" class="inputText" type="text" placeholder="What needs to be done?" autofocus="">
+      </div>
+      <ul id="todoList" class = "todoList">
+      </ul>
+    </div>
+  </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>
+    $('#inputText').keydown(function(e) {
+      var item = $('#inputText').val();
+      if (e.which == 13 && item.length > 0) {
+        $.ajax({
+          method: "POST",
+          url: "/todoitems",
+          contentType: "application/json",
+          data: JSON.stringify({todo: item})
+        })
+        .done(function(data) {
+          loadItems()
+          console.log(data)
+        });
+      }
+    });
+    function loadItems() {
+      $.get("../todoitems")
+        .done(function(data) {
+          if(data.length > 0) {
+            $('#todoList').empty();
+            for (var i=0; i<data.length; i++) {
+              $('#todoList').append("<li><input class=\"toggle\" type=\"checkbox\">" + data[i] + "</li>")
+            }
+          }
+        });
+    }
+    loadItems()
+  </script>
+</body>
+</html>
