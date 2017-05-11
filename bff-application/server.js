@@ -31,6 +31,12 @@ app.use("/explorer", express.static("./public/swagger-ui"));
 ////////serve static file
 app.use("/", express.static("./views"));
 
+///////access control origins
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 // Business logic
 app.get("/todoitems", function(req, res, next){
