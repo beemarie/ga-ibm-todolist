@@ -38,7 +38,7 @@ app.get("/todoitems", function(req, res, next){
 	cloudantDb.list({ include_docs: true },function(err, body) {
 		if(!err) {
 			body.rows.forEach(function(row) {
-				todoitems.push(row.doc.todo)
+				todoitems.push(row.doc)
 			})
 			res.json(todoitems);
 		}
@@ -65,7 +65,7 @@ app.post("/todoitems", function(req, res, next){
 		if (err) {
 			return console.log("error", err.message)
 		}
-		res.send("item added")
+		res.send(body)
 	})
 	// Put your business logic here
 	//res.json();
@@ -82,9 +82,25 @@ app.put("/todoitem/:id", function(req, res, next){
 });
 
 
-// app.delete("/todoitem/:id", function(req, res, next){
-// 	db.get()
-// });
+app.delete("/todoitem/:id", function(req, res, next){
+	var todoItemId = req.params.id
+
+	cloudantDb.get(todoItemId, function(err, data) {
+		if (err) {
+			res.json({err:err});
+			return;
+		}
+		var doc = data
+		console.log(doc)
+		cloudantDb.destroy(doc._id, doc._rev, function(err, data) {
+			if(err) {
+				res.json({err:err});
+				return;
+			}
+			res.json({deleted_doc:doc, data:data});
+		})
+	})
+});
 
 
 // Starting the server

@@ -20,9 +20,19 @@
   </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script>
+  var todos = [];
+  $(document).ready(function () {
+    $(document).on('mouseenter', '.items', function () {
+      $(this).find(":button").show();
+    }).on('mouseleave', '.items', function () {
+      $(this).find(":button").hide();
+    });
+  });
+
     $('#inputText').keydown(function(e) {
       var item = $('#inputText').val();
       if (e.which == 13 && item.length > 0) {
+        $('#inputText').val('')
         $.ajax({
           method: "POST",
           url: "/todoitems",
@@ -30,8 +40,11 @@
           data: JSON.stringify({todo: item})
         })
         .done(function(data) {
-          loadItems()
           console.log(data)
+          loadItems()
+          //todos.push(data)
+          //refreshList()
+          console.log(todos)
         });
       }
     });
@@ -39,12 +52,42 @@
       $.get("../todoitems")
         .done(function(data) {
           if(data.length > 0) {
-            $('#todoList').empty();
+            todos = []
             for (var i=0; i<data.length; i++) {
-              $('#todoList').append("<li><input class=\"toggle\" type=\"checkbox\">" + data[i] + "</li>")
+              todos.push(data[i])
             }
+            refreshList()
           }
         });
+    }
+
+    function refreshList() {
+      $('#todoList').empty();
+      for (var i=0; i<todos.length; i++) {
+        $('#todoList').append("<li class=\"items\"><input class=\"toggle\" type=\"checkbox\">"
+        + todos[i].todo
+        + "<button class=\"button\" onclick=\"deleteItem("
+        + i
+        + ")\">X</button></li>")
+      }
+    }
+
+    function deleteItem(index) {
+      var id = todos[index]._id
+      $.ajax({
+        method: "DELETE",
+        url: "/todoitem/" + id,
+        contentType: "application/json"
+      })
+      console.log("index:")
+      console.log(index)
+      console.log("todos before splice")
+      console.log(todos)
+      todos.splice(index, 1)
+      console.log("todos after splice")
+      console.log(todos)
+      console.log(this)
+      refreshList()
     }
     loadItems()
   </script>
