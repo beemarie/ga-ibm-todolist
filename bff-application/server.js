@@ -15,8 +15,6 @@ const Cloudant = require('cloudant');
 try { require("./vcap-local"); } catch (e) {}
 var appEnv = cfenv.getAppEnv();
 
-
-
 // AppMetrics monitoring instrumentation
 require('appmetrics-dash').attach();
 
