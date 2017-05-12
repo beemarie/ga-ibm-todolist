@@ -21,6 +21,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script>
   var todos = [];
+  var baseurl = "http://YOUR-TODOLIST-BFF.mybluemix.net"
   $(document).ready(function () {
     $(document).on('mouseenter', '.items', function () {
       $(this).find(":button").show();
@@ -35,7 +36,7 @@
         $('#inputText').val('')
         $.ajax({
           method: "POST",
-          url: "/todoitems",
+          url: baseurl + "/todoitems",
           contentType: "application/json",
           data: JSON.stringify({todo: item})
         })
@@ -45,7 +46,7 @@
       }
     });
     function loadItems() {
-      $.get("../todoitems")
+      $.get(baseurl + "/todoitems")
         .done(function(data) {
           if(data.length > 0) {
             todos = []
@@ -72,7 +73,7 @@
       var id = todos[index]._id
       $.ajax({
         method: "DELETE",
-        url: "/todoitem/" + id,
+        url: baseurl + "/todoitem/" + id,
         contentType: "application/json"
       })
       todos.splice(index, 1)
