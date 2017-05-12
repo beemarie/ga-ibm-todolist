@@ -3,13 +3,12 @@ const express = require('express');
 const bodyParser = require("body-parser");
 const app = express();
 app.use(bodyParser.text());
-///////////why app.use bodyparser.json() not in
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
 app.use(bodyParser.json())
-//////////////////////////////////////////////
+
 const Cloudant = require('cloudant');
 
 // Emulating VCAP_VARIABLES if running in local mode
@@ -28,8 +27,6 @@ var cloudantDb = cloudant.db.use("mydb");
 // Swagger instrumentation
 app.use("/swagger/api", express.static("./public/swagger.yaml"));
 app.use("/explorer", express.static("./public/swagger-ui"));
-////////serve static file
-app.use("/", express.static("./views"));
 
 ///////Enable CORS for all origins
 app.use(function(req, res, next) {
@@ -76,7 +73,6 @@ app.put("/todoitem/:id", function(req, res, next){
 	res.json();
 });
 
-
 app.delete("/todoitem/:id", function(req, res, next){
 	var todoItemId = req.params.id
 	cloudantDb.get(todoItemId, function(err, doc) {
@@ -93,7 +89,6 @@ app.delete("/todoitem/:id", function(req, res, next){
 		})
 	})
 });
-
 
 // Starting the server
 const port = 'PORT' in process.env ? process.env.PORT : 8080;
