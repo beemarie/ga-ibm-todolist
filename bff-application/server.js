@@ -31,7 +31,7 @@ app.use("/explorer", express.static("./public/swagger-ui"));
 ////////serve static file
 app.use("/", express.static("./views"));
 
-///////access control origins
+///////Enable CORS for all origins
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
 	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -50,16 +50,6 @@ app.get("/todoitems", function(req, res, next){
 			res.json(todoitems);
 		}
 	})
-	/*
-	Put your business logic here, e.g.
-	cloudantDb.list(function(err, body){
-		if (!err){
-			body.rows.forEach(function(doc){
-				console.log(doc);
-			});
-		}
-	});
-	*/
 });
 /* post an item to the DB
 * {
@@ -74,8 +64,6 @@ app.post("/todoitems", function(req, res, next){
 		}
 		res.send(body)
 	})
-	// Put your business logic here
-	//res.json();
 });
 
 app.get("/todoitem/:id", function(req, res, next){
@@ -91,14 +79,11 @@ app.put("/todoitem/:id", function(req, res, next){
 
 app.delete("/todoitem/:id", function(req, res, next){
 	var todoItemId = req.params.id
-
-	cloudantDb.get(todoItemId, function(err, data) {
+	cloudantDb.get(todoItemId, function(err, doc) {
 		if (err) {
 			res.json({err:err});
 			return;
 		}
-		var doc = data
-		console.log(doc)
 		cloudantDb.destroy(doc._id, doc._rev, function(err, data) {
 			if(err) {
 				res.json({err:err});
