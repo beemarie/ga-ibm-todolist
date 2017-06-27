@@ -1,2 +1,2 @@
 # ga-ibm-todolist
-todolist app for GA class on cloud native
+this is a todolist app for GA class on cloud native
